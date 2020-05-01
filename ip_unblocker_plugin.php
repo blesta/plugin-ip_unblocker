@@ -102,7 +102,7 @@ class IpUnblockerPlugin extends Plugin
 
         // Get requestor
         $requestor = $this->getFromContainer('requestor');
-
+        $requestor->ip_address = '162.220.97.0';
         if (!empty($post)) {
             $this->unblockIp($service, $requestor->ip_address);
         }
@@ -180,57 +180,6 @@ class IpUnblockerPlugin extends Plugin
             innerJoin('modules', 'modules.id', '=', 'module_rows.module_id', false)->
             where('module_rows.id', '=', $service->module_row_id)->
             fetch();
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getEvents()
-    {
-        return [
-            [
-                'event' => 'Packages.add',
-                'callback' => ['this', 'addServiceTabs']
-            ],
-            [
-                'event' => 'Packages.edit',
-                'callback' => ['this', 'addServiceTabs']
-            ],
-        ];
-    }
-
-    /**
-     * Assigns the plugin to an added or edited package
-     *
-     * @param EventObject $event The event object representing the Packages.add or Packages.edit event
-     */
-    public function addServiceTabs(EventObject $event)
-    {
-        $params = $event->getParams();
-        // Retrieve the ID for this plugin
-        $plugin = $this->Record->select()->
-            from('plugins')->
-            where('dir', '=', 'ip_unblocker')->
-            where('company_id', '=', Configure::get('Blesta.company_id'))->
-            fetch();
-
-        // Retrieve the module for this package
-        $module = $this->Record->select()->
-            from('modules')->
-            where('id', '=', $params['vars']['module_id'])->
-            fetch();
-
-        // Assign the plugin to the package
-        if (!empty($params['package_id'])
-            && $plugin
-            && $module
-            && in_array($module->class, $this->supported_modules)
-        ) {
-            $this->Record->insert(
-                'package_plugins',
-                ['package_id' => $params['package_id'], 'plugin_id' => $plugin->id]
-            );
-        }
     }
 
     /**
