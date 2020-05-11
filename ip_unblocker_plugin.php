@@ -102,7 +102,6 @@ class IpUnblockerPlugin extends Plugin
 
         // Get requestor
         $requestor = $this->getFromContainer('requestor');
-        $requestor->ip_address = '162.220.97.0';
         if (!empty($post)) {
             $this->unblockIp($service, $requestor->ip_address);
         }
