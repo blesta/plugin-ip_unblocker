@@ -27,3 +27,10 @@ your Blesta installation path.
 4. Find the IP Unblocker plugin and click the "Install" button to install it
 
 5. You're done!
+
+### Blesta Compatibility
+
+|Blesta Version|Module Version|
+|--------------|--------------|
+|< v4.12.0|v1.0.0|
+|>= v5.0.0|v1.1.0+|
