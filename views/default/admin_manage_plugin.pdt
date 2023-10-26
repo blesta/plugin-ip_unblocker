@@ -1,0 +1,28 @@
+
+        <?php
+        $this->Widget->clear();
+        $this->Widget->create($this->_('IpUnblockerManagePlugin.index.boxtitle_manage', true));
+        $this->Form->create();
+        ?>
+        <div class="inner">
+            <div class="pad">
+                <ul>
+                    <li>
+                        <?php
+                        $this->Form->fieldCheckbox('client_set_ip', 'true', (($client_set_ip ?? 'false') == 'true'), ['id' => 'client_set_ip']);
+                        $this->Form->label($this->_('IpUnblockerManagePlugin.index.client_set_ip', true), 'client_set_ip', ['class' => 'inline']);
+                        ?>
+                    </li>
+                </ul>
+            </div>
+
+            <div class="button_row">
+                <?php
+                $this->Form->fieldSubmit('save', $this->_('IpUnblockerManagePlugin.index.submit_settings', true), ['class' => 'btn btn-primary pull-right']);
+                ?>
+            </div>
+        </div>
+        <?php
+        $this->Form->end();
+        $this->Widget->end();
+        ?>

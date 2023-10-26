@@ -41,6 +41,28 @@ class IpUnblockerPlugin extends Plugin
     }
 
     /**
+     * Performs any necessary cleanup actions
+     *
+     * @param int $plugin_id The ID of the plugin being uninstalled
+     * @param bool $last_instance True if $plugin_id is the last instance across all
+     *  companies for this plugin, false otherwise
+     */
+    public function uninstall($plugin_id, $last_instance)
+    {
+        if (!isset($this->Companies)) {
+            Loader::loadComponents($this, ['Companies']);
+        }
+
+        // Remove all plugin settings *IFF* no other company in the system is using this plugin
+        if ($last_instance) {
+            $companies = $this->Companies->getAll();
+            foreach ($companies as $company) {
+                $this->Companies->unsetSetting($company->id, 'ip_unblocker_client_set_ip');
+            }
+        }
+    }
+
+    /**
      * Returns whether this plugin provides support for setting admin or client service tabs
      * @see Plugin::getAdminServiceTabs
      * @see Plugin::getClientServiceTabs
@@ -100,10 +122,23 @@ class IpUnblockerPlugin extends Plugin
         // Load currency helper
         Loader::loadHelpers($this, ['Form', 'Html']);
 
+        // Get settings
+        if (!isset($this->Companies)) {
+            Loader::loadComponents($this, ['Companies']);
+        }
+        $client_set_ip = $this->Companies->getSetting(Configure::get('Blesta.company_id'), 'ip_unblocker_client_set_ip');
+        $this->view->set('client_set_ip', ($client_set_ip->vaLue ?? 'false'));
+
         // Get requestor
         $requestor = $this->getFromContainer('requestor');
         if (!empty($post)) {
-            $this->unblockIp($service, $requestor->ip_address);
+            $ip_address = $requestor->ip_address;
+
+            if (($client_set_ip->value ?? 'false') == 'true') {
+                $ip_address = $post['ip_address'] ?? $requestor->ip_address;
+            }
+
+            $this->unblockIp($service, $ip_address);
         }
 
         // Make the IP address available to the view
