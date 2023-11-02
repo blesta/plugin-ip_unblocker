@@ -127,7 +127,7 @@ class IpUnblockerPlugin extends Plugin
             Loader::loadComponents($this, ['Companies']);
         }
         $client_set_ip = $this->Companies->getSetting(Configure::get('Blesta.company_id'), 'ip_unblocker_client_set_ip');
-        $this->view->set('client_set_ip', ($client_set_ip->vaLue ?? 'false'));
+        $this->view->set('client_set_ip', ($client_set_ip->value ?? 'false'));
 
         // Get requestor
         $requestor = $this->getFromContainer('requestor');
