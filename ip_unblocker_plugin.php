@@ -163,11 +163,15 @@ class IpUnblockerPlugin extends Plugin
         $module_row = $this->ModuleManager->getRow($service->module_row_id);
         $meta = $module_row->meta;
 
+        $reseller = false;
         switch ($module->class) {
             case 'cpanel':
+                // Check if the user is a reseller
+                $reseller = !($meta->user_name == 'root');
+
                 // Make the unblock request to cPanel
                 $response = $this->makeRequest(
-                    ['action' => 'kill', 'ip' => $ip_address],
+                    ['action' => ($reseller ? 'qkill' : 'kill'), 'ip' => $ip_address],
                     'http' . ($meta->use_ssl == '1' ? 's' : '') . '://'
                         . $meta->host_name . ':2087/cgi/configserver/csf.cgi',
                     'POST',
@@ -180,9 +184,12 @@ class IpUnblockerPlugin extends Plugin
                 }
                 break;
             case 'direct_admin':
+                // Check if the user is a reseller
+                $reseller = !($meta->user_name == 'admin');
+
                 // Make the unblock request to Direct Admin
                 $response = $this->makeRequest(
-                    ['action' => 'kill', 'ip' => $ip_address],
+                    ['action' => ($reseller ? 'qkill' : 'kill'), 'ip' => $ip_address],
                     'http' . ($meta->use_ssl == '1' ? 's' : '') . '://'
                         . $meta->host_name . ':' . $meta->port . '/CMD_PLUGINS_ADMIN/csf/index.raw',
                     'POST',
