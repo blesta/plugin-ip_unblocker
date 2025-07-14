@@ -187,17 +187,25 @@ class IpUnblockerPlugin extends Plugin
                 // Check if the user is a reseller
                 $reseller = !($meta->user_name == 'admin');
 
-                // Make the unblock request to Direct Admin
-                $response = $this->makeRequest(
-                    ['action' => ($reseller ? 'qkill' : 'kill'), 'ip' => $ip_address],
-                    'http' . ($meta->use_ssl == '1' ? 's' : '') . '://'
-                        . $meta->host_name . ':' . $meta->port . '/CMD_PLUGINS_ADMIN/csf/index.raw',
+                // Make a login request to Direct Admin
+                $this->makeRequest(
+                    ['username' => $meta->user_name, 'password' => $meta->password],
+                    'http' . ($meta->use_ssl == 'true' ? 's' : '') . '://'
+                        . $meta->host_name . ':' . $meta->port . '/CMD_LOGIN',
                     'POST',
                     [
                         CURLOPT_USERAGENT => 'Blesta IP Unblocker',
                         CURLOPT_USERPWD => $meta->user_name . ':' . $meta->password,
                         CURLOPT_HTTPAUTH => CURLAUTH_BASIC
                     ]
+                );
+                // Make the unblock request to Direct Admin
+                $response = $this->makeRequest(
+                    ['action' => ($reseller ? 'qkill' : 'kill'), 'ip' => $ip_address],
+                    'http' . ($meta->use_ssl == 'true' ? 's' : '') . '://'
+                        . $meta->host_name . ':' . $meta->port . '/CMD_PLUGINS_ADMIN/csf/index.raw',
+                    'POST',
+                    [CURLOPT_USERAGENT => 'Blesta IP Unblocker']
                 );
 
                 // Set success message
@@ -259,6 +267,10 @@ class IpUnblockerPlugin extends Plugin
 
         // Create new session cookies
         curl_setopt($ch, CURLOPT_COOKIESESSION, true);
+        // Create new session cookies
+        curl_setopt($ch, CURLOPT_COOKIESESSION, true);
+
+        curl_setopt($ch, CURLOPT_HTTPHEADER, ['Cookie: ' . $this->cookie]);
 
         // Check the Header
         curl_setopt($ch, CURLOPT_HEADER, 1);
@@ -272,6 +284,8 @@ class IpUnblockerPlugin extends Plugin
         // Get response from the server.
         $response = curl_exec($ch);
 
+
+        $this->setCookie($response);
         // Set curl errors
         $error = curl_error($ch);
         if ($error !== '') {
@@ -285,5 +299,27 @@ class IpUnblockerPlugin extends Plugin
         curl_close($ch);
 
         return trim(substr($response, $curlInfo['header_size']));
+    }
+
+    /**
+     * Parses an HTTP response for cookies and records them for later use
+     *
+     * @param string $response The string response from the Control Panel
+     */
+    private function setCookie($response)
+    {
+        preg_match_all('/^Set-Cookie:\s*([^;]*)/mi', $response, $matches);
+
+        if (!empty($matches)) {
+            $cookies = [];
+            foreach ($matches[1] as $item) {
+                parse_str($item, $cookie);
+                $cookies = array_merge($cookies, $cookie);
+            }
+
+            foreach ($cookies as $cookie => $value) {
+                $this->cookie = (!empty($this->cookie) ? $this->cookie . ';' : '') . $cookie . '=' . $value;
+            }
+        }
     }
 }
