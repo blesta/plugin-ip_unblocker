@@ -3,7 +3,7 @@
  * IP Unblocker manage plugin controller
  *
  * @package blesta
- * @subpackage blesta.plugins.ip_unblocker
+ * @subpackage plugins.ip_unblocker
  * @copyright Copyright (c) 2023, Phillips Data, Inc.
  * @license http://www.blesta.com/license/ The Blesta License Agreement
  * @link http://www.blesta.com/ Blesta
