@@ -6,7 +6,7 @@ use Blesta\Core\Util\Common\Traits\Container;
  * IP Unblocker plugin handler
  *
  * @package blesta
- * @subpackage plugins.ip_unblocker
+ * @subpackage plugins.ipunblocker
  * @copyright Copyright (c) 2020, Phillips Data, Inc.
  * @license http://www.blesta.com/license/ The Blesta License Agreement
  * @link http://www.blesta.com/ Blesta
