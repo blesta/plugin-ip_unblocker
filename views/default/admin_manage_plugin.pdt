@@ -1,22 +1,20 @@
 
         <?php
         $this->Widget->clear();
+        $this->Widget->setBodyWrapper(false);
         $this->Widget->create($this->_('IpUnblockerManagePlugin.index.boxtitle_manage', true));
         $this->Form->create();
         ?>
-        <div class="inner">
-            <div class="pad">
-                <ul>
-                    <li>
-                        <?php
-                        $this->Form->fieldCheckbox('client_set_ip', 'true', (($client_set_ip ?? 'false') == 'true'), ['id' => 'client_set_ip']);
-                        $this->Form->label($this->_('IpUnblockerManagePlugin.index.client_set_ip', true), 'client_set_ip', ['class' => 'inline']);
-                        ?>
-                    </li>
-                </ul>
+            <div class="card-body">
+                <div class="mb-3">
+                    <?php
+                    $this->Form->fieldCheckbox('client_set_ip', 'true', (($client_set_ip ?? 'false') == 'true'), ['id' => 'client_set_ip']);
+                    $this->Form->label($this->_('IpUnblockerManagePlugin.index.client_set_ip', true), 'client_set_ip', ['class' => 'inline']);
+                    ?>
+                </div>
             </div>
 
-            <div class="button_row">
+            <div class="card-footer d-flex justify-content-end">
                 <?php
                 $this->Form->fieldSubmit('save', $this->_('IpUnblockerManagePlugin.index.submit_settings', true), ['class' => 'btn btn-primary pull-right']);
                 ?>

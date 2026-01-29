@@ -1,7 +1,8 @@
 {
-    "version": "1.4.1",
+    "version": "2.0.0",
     "name": "IpUnblockerPlugin.name",
     "description": "IpUnblockerPlugin.description",
+    "icon": "bi bi-bricks",
     "authors": [
         {
             "name": "Phillips Data, Inc.",
