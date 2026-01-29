@@ -19,7 +19,6 @@
                 $this->Form->fieldSubmit('save', $this->_('IpUnblockerManagePlugin.index.submit_settings', true), ['class' => 'btn btn-primary pull-right']);
                 ?>
             </div>
-        </div>
         <?php
         $this->Form->end();
         $this->Widget->end();
