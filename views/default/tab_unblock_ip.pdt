@@ -1,3 +1,5 @@
+<?php /** @var View $this */ ?>
+
 <h4><?php $this->_('IpUnblockerPlugin.unblock_ip')?></h4>
 <?php
 $this->Form->create();
