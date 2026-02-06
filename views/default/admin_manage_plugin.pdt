@@ -15,7 +15,8 @@
                 </div>
             </div>
 
-            <div class="card-footer d-flex justify-content-end">
+            <?php $this->Widget->footer(); ?>
+            <div class="d-flex justify-content-end">
                 <?php
                 $this->Form->fieldSubmit('save', $this->_('IpUnblockerManagePlugin.index.submit_settings', true), ['class' => 'btn btn-primary pull-right']);
                 ?>
