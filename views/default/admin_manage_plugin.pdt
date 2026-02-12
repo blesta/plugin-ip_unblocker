@@ -1,28 +1,32 @@
+<?php /** @var View $this */ ?>
 
-        <?php
-        $this->Widget->clear();
-        $this->Widget->create($this->_('IpUnblockerManagePlugin.index.boxtitle_manage', true));
-        $this->Form->create();
-        ?>
-        <div class="inner">
-            <div class="pad">
-                <ul>
-                    <li>
-                        <?php
-                        $this->Form->fieldCheckbox('client_set_ip', 'true', (($client_set_ip ?? 'false') == 'true'), ['id' => 'client_set_ip']);
-                        $this->Form->label($this->_('IpUnblockerManagePlugin.index.client_set_ip', true), 'client_set_ip', ['class' => 'inline']);
-                        ?>
-                    </li>
-                </ul>
-            </div>
+<?php
+$this->Form->create(null, ['class' => 'disable-on-submit']);
 
-            <div class="button_row">
-                <?php
-                $this->Form->fieldSubmit('save', $this->_('IpUnblockerManagePlugin.index.submit_settings', true), ['class' => 'btn btn-primary pull-right']);
-                ?>
-            </div>
-        </div>
+$this->Widget->clear();
+$this->Widget->setBodyWrapper(false);
+$this->Widget->create($this->_('IpUnblockerManagePlugin.index.boxtitle_manage', true), [], ($render_section ?? null));
+?>
+
+<div class="card-body">
+    <div class="form-check mb-3">
         <?php
-        $this->Form->end();
-        $this->Widget->end();
+        $this->Form->fieldCheckbox('client_set_ip', 'true', (($client_set_ip ?? 'false') == 'true'), ['id' => 'client_set_ip', 'class' => 'form-check-input']);
         ?>
+        <label class="form-check-label" for="client_set_ip">
+            <?php $this->_('IpUnblockerManagePlugin.index.client_set_ip'); ?>
+        </label>
+    </div>
+</div>
+
+<?php $this->Widget->footer(); ?>
+<div class="d-flex justify-content-end">
+    <?php
+    $this->Form->fieldSubmit('save', $this->_('IpUnblockerManagePlugin.index.submit_settings', true), ['class' => 'btn btn-primary']);
+    ?>
+</div>
+
+<?php
+$this->Widget->end();
+$this->Form->end();
+?>
